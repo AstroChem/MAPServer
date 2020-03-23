@@ -20,3 +20,19 @@ def transitions():
     transitions_list = result.fetchall()
 
     return render_template('transitions.html', transitions=transitions_list)
+
+@main.route('/cube')
+def cube():
+    '''
+    View the image cube.
+    '''
+
+    # get the paths for the images from the database
+    # template against them to create the HTML
+    # load the relevant CSS
+    # script the JS to it
+    # render
+
+    # could also have a new route that compares two cubes
+
+    pass

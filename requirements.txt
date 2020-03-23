@@ -4,4 +4,4 @@ flask
 flask-bootstrap
 flask-moment
 flask-wtf
-flask-sqlalchemy
+sqlalchemy

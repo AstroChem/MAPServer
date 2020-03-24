@@ -3,6 +3,9 @@ Flask website hosting TCLEAN and RML image products.
 
 ## Test server locally
 
+activate the virtual environment
+    $ source .venv/bin/activate
+
 set up the database connection 
     $ export SQLALCHEMY_DATABASE_URI="sqlite:////Users/ianczekala/Documents/MAPS/MAPS.db"
 

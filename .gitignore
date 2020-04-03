@@ -130,3 +130,11 @@ dmypy.json
 
 # vscode
 .vscode/
+
+.venv 
+
+instance/
+htmlcov/
+dist/
+build/
+*.egg-info/

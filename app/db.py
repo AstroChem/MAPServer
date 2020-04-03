@@ -4,14 +4,13 @@ from flask.cli import with_appcontext
 from sqlalchemy import create_engine
 from mapsdb import schema 
 
-import os
-
-URI = os.environ['SQLALCHEMY_DATABASE_URI']
-
+# g is a special object that is unique for each request, so this connection only lasts 
+# as long as the request
 def get_db():
+
     if 'db' not in g:
         # load the database into globals
-        engine = create_engine(URI)
+        engine = create_engine(current_app.config["DATABASE_URI"])
         conn = engine.connect()
         g.db = conn
 

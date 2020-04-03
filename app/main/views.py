@@ -17,7 +17,11 @@ from app.db import get_db
 
 @main.route("/")
 def index():
-    return render_template("index.html")
+    return render_template(
+        "index.html",
+        transitions_url=url_for(".transitions"),
+        disks_url=url_for(".disks"),
+    )
 
 
 @main.route("/transitions/")
@@ -25,14 +29,27 @@ def transitions():
     """
     Show all transitions.
     """
-    # transitions_list = ["C18O", "13CO", "buttermilk"]
-
-    s = select([schema.transitions])
     db = get_db()
-    result = db.execute(s)
-    transitions_list = result.fetchall()
+    with db.begin():
+        s = select([schema.transitions])
+        result = db.execute(s)
+        transitions_list = result.fetchall()
 
     return render_template("transitions.html", transitions=transitions_list)
+
+
+@main.route("/disks/")
+def disks():
+    """
+    Show all disks.
+    """
+    db = get_db()
+    with db.begin():
+        s = select([schema.disks])
+        result = db.execute(s)
+        disks_list = result.fetchall()
+
+    return render_template("disks.html", disks=disks_list)
 
 
 # @main.route('/transitions/<int:transition_id>/')
@@ -86,6 +103,7 @@ def cube(cube_id):
     return render_template("cube.html", image_paths=image_paths)
 
 
+# this doesn't end in a slash because we are looking to mimic a filename
 @main.route("/imgs/<path:filename>")
 def send_file(filename):
     return send_from_directory(

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="username">Username</label>
+    <input name="username" id="username" required>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    <input type="submit" value="Log In">
+  </form>
+  <p>
+    Welcome to the website for the ALMA MAPS (Molecules with ALMA on Planet-forming Scales) large program, P.I.'d by Prof. Karin &Ouml;berg (Harvard). If you have questions about the large program in general, please direct them to <a href="mailto:koberg@cfa.harvard.edu">koberg@cfa.harvard.edu</a>. If you are a member of the collaboration and you are having difficulty accessing these webpages, please contact Ian Czekala <a href="iczekala@berkeley.edu">iczekala@berkeley.edu</a>. 
+  </p>
+{% endblock %}
+

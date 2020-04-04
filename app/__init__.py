@@ -19,7 +19,7 @@ def create_app(test_config=None):
     )
 
     if test_config is None:
-        app.config.from_object("app.config.DevelopmentConfig")
+        app.config.from_object("app.configuration.DevelopmentConfig")
         app.config.from_pyfile("config.cfg")
 
     else:
@@ -36,8 +36,6 @@ def create_app(test_config=None):
 
     bootstrap.init_app(app)
     # moment.init_app(app)
-
-    print(app.config)
 
     from . import auth 
     app.register_blueprint(auth.bp)

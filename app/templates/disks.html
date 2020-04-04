@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Disks{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>MAPS Disks</h1>
+    <ul>
+        {% for disk in disks %}
+            <li>{{ disk }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

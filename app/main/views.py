@@ -13,9 +13,11 @@ from sqlalchemy import select
 from mapsdb import schema
 
 from app.db import get_db
+from app.auth import login_required
 
 
 @main.route("/")
+@login_required
 def index():
     return render_template(
         "index.html",
@@ -25,6 +27,7 @@ def index():
 
 
 @main.route("/transitions/")
+@login_required
 def transitions():
     """
     Show all transitions.
@@ -39,6 +42,7 @@ def transitions():
 
 
 @main.route("/disks/")
+@login_required
 def disks():
     """
     Show all disks.

@@ -1,0 +1,37 @@
+{% extends "table.html" %}
+
+{% block title %}Runs on the Cannon Cluster{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>MAPS Runs</h1>
+</div>
+
+<div>
+    <table id="table_id" class="display">
+        <thead>
+            <tr>
+                <th>Run ID</th>
+                <th>Job Array ID</th>
+                <th>Run Status ID</th>
+                <td>Updated</td>
+                <td>Channel Start</td>
+                <td>Channel End</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for run in runs %}
+            <tr>
+                <td><a href={{ url_for('main.run', run_id=run.run_id) }}>{{run.run_id}}</a></td>
+                <td>{{run.job_array_id}}</td>
+                <td>{{run.run_status_id}}</td>
+                <td>{{run.updated}}</td>
+                <td>{{run.channel_start}}</td>
+                <td>{{run.channel_end}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock page_content %}

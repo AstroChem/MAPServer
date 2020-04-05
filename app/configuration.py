@@ -5,6 +5,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
+    MAPS_ROOT = os.environ["MAPS_ROOT"]
     SECRET_KEY = "super-secret"
     
 class DevelopmentConfig(Config):

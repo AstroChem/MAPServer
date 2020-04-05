@@ -16,6 +16,16 @@ from app.db import get_db
 from app.auth import login_required
 
 
+import os
+import pandas as pd
+import numpy as np
+from bokeh.plotting import figure
+from bokeh.models import ColumnDataSource
+from bokeh.embed import components
+from bokeh.palettes import Dark2_5 as palette
+import itertools
+
+
 @main.route("/")
 @login_required
 def index():
@@ -49,34 +59,94 @@ def disks():
     """
     db = get_db()
     with db.begin():
-        s = select([schema.disks])
+        s = select([schema.disks.c.disk_id, schema.disks.c.disk_name])
         result = db.execute(s)
         disks_list = result.fetchall()
+
+    print(disks_list)
 
     return render_template("disks.html", disks=disks_list)
 
 
-# @main.route('/transitions/<int:transition_id>/')
-# def transition_id():
-#     '''
-#     Present a list of all disks imaged at that transition.
-#     '''
-#     pass
+@main.route("/disks/<int:disk_id>/")
+def disk(disk_id):
+    """
+    Display the summary page corresponding to a particular disk. List all the transitions available, and the links to their runs.
+    """
 
-# @main.route('/<disk>/')
-# def disk():
-#     '''
-#     Display the summary page corresponding to a particular disk. List all the transitions available, and the links to their runs.
-#     '''
-#     # want to think about using url_for()
-#     pass
+    # make a giant merge of all of the rows with this disk_id
 
-# @main.route('/run/<int:run_id>)
+    # Disk name, parameters
+
+    # transitions  which (Mol / QN / Freq) they correspond to and which have available measurement sets, how many runs they have
+
+    # return render_template("disk.html", disk_dictionary=disk_dictionary)
+    pass
+
+
+@main.route("/runs/")
+def runs():
+    """
+    Show all runs
+    """
+
+    db = get_db()
+    with db.begin():
+        # create a giant join to get all the important run properties
+
+        s = select([schema.runs])
+        result = db.execute(s)
+        runs_list = result.fetchall()
+
+    return render_template("runs.html", runs=runs_list)
+
+
+@main.route("/runs/<int:run_id>/")
 def run(run_id):
     """
     Show the run summary corresponding to the run_id.
     """
-    pass
+
+    # get the loss.csv fname from the run_id
+    db = get_db()
+    with db.begin():
+        s = select([schema.runs.c.output_dir]).where(schema.runs.c.run_id == run_id)
+        result = db.execute(s)
+        rel_output_dir = result.first()[0]
+
+    fname = os.path.join(current_app.config["MAPS_ROOT"], rel_output_dir, "losses.csv")
+    df = pd.read_csv(fname)
+    # drop the columns that are nan
+    df = df.dropna(axis=1)
+    source = ColumnDataSource(df)
+
+    colors = itertools.cycle(palette)
+
+    p = figure(title="Losses", x_axis_label="Iteration", y_axis_label="Loss")
+    for key in [
+        "tot",
+        "nll",
+        "entropy",
+        "sparsity",
+        "TV_image",
+        "TV_channel",
+        "UV_sparsity",
+    ]:
+        if key in df.columns:
+            p.line(
+                x="index",
+                y=key,
+                source=source,
+                line_width=2,
+                legend_label=key,
+                color=next(colors),
+            )
+
+    script, div = components(p)
+
+    return render_template(
+        "run_id.html", run_id=run_id, script=script, bokeh_plot_div=div
+    )
 
 
 @main.route("/cube/<int:cube_id>/")

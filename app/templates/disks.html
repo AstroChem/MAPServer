@@ -5,10 +5,14 @@
 {% block page_content %}
 <div class="page-header">
     <h1>MAPS Disks</h1>
-    <ul>
+</div>
+<div>
+    <ul class="list-group list-group-horizontal">
         {% for disk in disks %}
-            <li>{{ disk }}</li>
+        <li class="list-group-item"><a href={{ url_for('main.disk', disk_id=disk.disk_id) }}>{{ disk.disk_name }}</a>
+        </li>
         {% endfor %}
     </ul>
 </div>
-{% endblock %}
+
+{% endblock page_content %}

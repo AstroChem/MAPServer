@@ -1,14 +1,39 @@
-{% extends "base.html" %}
+{% extends "table.html" %}
 
 {% block title %}Transitions{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
     <h1>MAPS Transitions</h1>
-    <ul>
-        {% for transition in transitions %}
-            <li>{{ transition }}</li>
-        {% endfor %}
-    </ul>
 </div>
-{% endblock %}
+
+<div>
+    <table id="table_id" class="display">
+        <thead>
+            <tr>
+                <th>Transition ID</th>
+                <th>Molecule</th>
+                <th>Quantum Number</th>
+                <td>Frequency (GHz)</td>
+                <td>Band</td>
+                <td>SPW</td>
+                <td>Disks</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transition in transitions %}
+            <tr>
+                <td>{{transition.transition_id}}</td>
+                <td>{{transition.molecule_name}}</td>
+                <td>{{transition.quantum_number}}</td>
+                <td>{{transition.frequency}}</td>
+                <td>{{transition.band_id}}</td>
+                <td>{{transition.spw_id}}</td>
+                <td>links to disk/transition/</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock page_content %}

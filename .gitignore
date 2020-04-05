@@ -131,7 +131,8 @@ dmypy.json
 # vscode
 .vscode/
 
-.venv 
+venv-imac/
+venv-lepus/
 
 instance/
 htmlcov/

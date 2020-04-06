@@ -1,43 +1,92 @@
 {% extends "table.html" %}
 
-{% block title %}{{ disk_params.disk_name }} Transition:{{ transition_id }} {% endblock %}
+{% block title %}{{ combo_params.disk_name }} Transition:{{ combo_params.transition_id }} {% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>{{ disk_params.disk_name }} Transition:{{ transition_id }}</h1>
+
+<div class="row">
+    <div class="col">
+        <h1>{{ combo_params.disk_name }} Transition:{{ combo_params.transition_id }}</h1>
+        <p>This page summarizes all of the available measurement sets and analysis runs for a particular
+            disk-transition combination.</p>
+    </div>
 </div>
 
-<h2>Available measurement sets</h2>
+<div class="row">
+    <div class="col">
+        <h2>All runs for this disk/transition combo</h2>
 
-<h2>All runs for this disk/transition combo</h2>
-
-<div>
-    <table id="table_id" class="display">
-        <thead>
-            <tr>
-                <th>Run ID</th>
-                <th>Disk Name</th>
-                <th>Mol Name</th>
-                <th>QN</th>
-                <th>Array ID</th>
-                <th>Status</th>
-                <td>Updated</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for run in runs %}
-            <tr>
-                <td><a href={{ url_for('main.run', run_id=run.run_id) }}>{{run.run_id}}</a></td>
-                <td>{{run.disk_name}}</td>
-                <td>{{run.molecule_name}}</td>
-                <td>{{run.quantum_number}}</td>
-                <td>{{run.job_array_id}}</td>
-                <td>{{run.run_status}}</td>
-                <td>{{run.updated}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <table id="table_runs" class="display">
+            <thead>
+                <tr>
+                    <th>Run ID</th>
+                    <th>Status</th>
+                    <th>Updated</th>
+                    <th>Method Type</th>
+                    <th>Method Version</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for run in runs_list %}
+                <tr>
+                    <td><a href={{ url_for('main.run', run_id=run.run_id) }}>{{run.run_id}}</a></td>
+                    <td>{{run.run_status}}</td>
+                    <td>{{run.updated}}</td>
+                    <td>{{run.method_type}}</td>
+                    <td>{{run.method_version}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<div class="row">
+    <div class="col">
+        <h2>Available measurement sets</h2>
+        <table id="table_ms" class="display">
+            <thead>
+                <tr>
+                    <th>MS ID</th>
+                    <th>Version</th>
+                    <th>Ingested</th>
+                    <th>tarfile md5</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ms in ms_list %}
+                <tr>
+                    <td>{{ms.measurement_set_id}}</td>
+                    <td>{{ms.version}}</td>
+                    <td>{{ms.ingested}}</td>
+                    <td>{{ms.tar_md5sum}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 {% endblock page_content %}
+
+
+{% block scripts_table %}
+<script>
+    $(document).ready(function () {
+        $('#table_runs').DataTable({
+            "pageLength": 25,
+            "order": [[2, 'desc']]
+        });
+    });
+
+    $(document).ready(function () {
+        $('#table_ms').DataTable({
+            "pageLength": 25,
+            // "order": [[4, 'desc']]
+        });
+    });
+
+
+</script>
+{% endblock scripts_table %}

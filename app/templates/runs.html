@@ -5,7 +5,8 @@
 {% block page_content %}
 <div class="page-header">
     <h1>MAPS Runs</h1>
-    <p>This page catalogs all imaging attempts carried out on the MAPS dataset. The <code>run_id</code> is a unique
+    <p>This page catalogs all imaging attempts carried out on all measurement sets of the MAPS large program. The
+        <code>run_id</code> is a unique
         primary key
         assigned to every new invocation of an imaging script to a particular disk / transition / measurement set
         combination. If you would like to refer precisely and uniquely to the products of a particular imaging attempt,
@@ -32,7 +33,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for run in runs %}
+            {% for run in runs_list %}
             <tr>
                 <td><a href={{ url_for('main.run', run_id=run.run_id) }}>{{run.run_id}}</a></td>
                 <td>{{run.disk_name}}</td>

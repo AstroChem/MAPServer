@@ -113,26 +113,21 @@ def disk_transition(disk_id, transition_id):
 
     db = get_db()
     with db.begin():
-        s = select([schema.disks]).where(schema.disks.c.disk_id == disk_id)
-        result = db.execute(s)
-        disk_params = result.first()
 
-        j = (
-            schema.runs.join(schema.run_statuses)
-            .join(schema.measurement_sets)
-            .join(schema.disks)
-            .join(schema.transitions)
-        )
-        s = (
-            select(
-                [
-                    schema.runs,
-                    schema.run_statuses.c.run_status,
-                    schema.disks.c.disk_name,
-                    schema.transitions.c.molecule_name,
-                    schema.transitions.c.quantum_number,
-                ]
+        # the qualities unique to this disk-transition combo
+        s = select([schema.disks, schema.transitions]).where(
+            and_(
+                (schema.disks.c.disk_id == disk_id),
+                (schema.transitions.c.transition_id == transition_id),
             )
+        )
+        result = db.execute(s)
+        combo_params = result.first()
+
+        # the measurement sets that correspond to this disk-transition-combo
+        j = schema.measurement_sets.join(schema.transitions).join(schema.disks)
+        s = (
+            select([schema.measurement_sets])
             .select_from(j)
             .where(
                 and_(
@@ -142,15 +137,56 @@ def disk_transition(disk_id, transition_id):
             )
         )
         result = db.execute(s)
+        ms_list = result.fetchall()
+
+        # the runs that correspond to this disk-transition combo (all MS's)
+        j = (
+            schema.runs.join(schema.run_statuses)
+            .join(
+                schema.method_implementations,
+                onclause=and_(
+                    (
+                        schema.runs.c.method_type_id
+                        == schema.method_implementations.c.method_type_id
+                    ),
+                    (
+                        schema.runs.c.method_version
+                        == schema.method_implementations.c.method_version
+                    ),
+                ),
+            )
+            .join(schema.method_types)
+            .join(schema.measurement_sets)
+            .join(schema.disks)
+            .join(schema.transitions)
+        )
+        s = (
+            select(
+                [
+                    schema.runs,
+                    schema.run_statuses.c.run_status,
+                    schema.method_types.c.method_type,
+                ]
+            )
+            .select_from(j)
+            .where(
+                and_(
+                    (schema.disks.c.disk_id == disk_id),
+                    (schema.transitions.c.transition_id == transition_id),
+                )
+            )
+            .reduce_columns()
+        )
+        result = db.execute(s)
         runs_list = result.fetchall()
 
-    print("runs list", runs_list)
+        print(result.keys())
 
     return render_template(
         "disk-transition.html",
-        disk_params=disk_params,
-        transition_id=transition_id,
-        runs=runs_list,
+        combo_params=combo_params,
+        ms_list=ms_list,
+        runs_list=runs_list,
     )
 
 
@@ -183,7 +219,7 @@ def runs():
         result = db.execute(s)
         runs_list = result.fetchall()
 
-    return render_template("runs.html", runs=runs_list)
+    return render_template("runs.html", runs_list=runs_list)
 
 
 @main.route("/runs/<int:run_id>/")

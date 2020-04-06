@@ -9,7 +9,7 @@ from flask import (
 )
 from . import main
 
-from sqlalchemy import select
+from sqlalchemy import select, join, and_
 from mapsdb import schema
 
 from app.db import get_db
@@ -74,14 +74,72 @@ def disk(disk_id):
     Display the summary page corresponding to a particular disk. List all the transitions available, and the links to their runs.
     """
 
-    # make a giant merge of all of the rows with this disk_id
+    db = get_db()
+    with db.begin():
+        s = select([schema.disks]).where(schema.disks.c.disk_id == disk_id)
+        result = db.execute(s)
+        disk_params = result.first()
 
-    # Disk name, parameters
+        # make a giant merge of all of the rows with this disk_id
+        j = schema.measurement_sets.join(schema.disks).join(schema.transitions)
+        s = (
+            select([schema.measurement_sets, schema.transitions])
+            .select_from(j)
+            .where(schema.disks.c.disk_id == disk_id)
+        ).reduce_columns()
+        result = db.execute(s)
+        ms_list = result.fetchall()
 
-    # transitions  which (Mol / QN / Freq) they correspond to and which have available measurement sets, how many runs they have
+    return render_template("disk.html", disk_params=disk_params, ms_list=ms_list)
 
-    # return render_template("disk.html", disk_dictionary=disk_dictionary)
-    pass
+
+@main.route("/disks/<int:disk_id>/transitions/<int:transition_id>/")
+def disk_transition(disk_id, transition_id):
+    """
+    Display the set of runs corresponding to this disk / transition combination.
+    """
+
+    db = get_db()
+    with db.begin():
+        s = select([schema.disks]).where(schema.disks.c.disk_id == disk_id)
+        result = db.execute(s)
+        disk_params = result.first()
+
+        j = (
+            schema.runs.join(schema.run_statuses)
+            .join(schema.measurement_sets)
+            .join(schema.disks)
+            .join(schema.transitions)
+        )
+        s = (
+            select(
+                [
+                    schema.runs,
+                    schema.run_statuses.c.run_status,
+                    schema.disks.c.disk_name,
+                    schema.transitions.c.molecule_name,
+                    schema.transitions.c.quantum_number,
+                ]
+            )
+            .select_from(j)
+            .where(
+                and_(
+                    (schema.disks.c.disk_id == disk_id),
+                    (schema.transitions.c.transition_id == transition_id),
+                )
+            )
+        )
+        result = db.execute(s)
+        runs_list = result.fetchall()
+
+    print("runs list", runs_list)
+
+    return render_template(
+        "disk-transition.html",
+        disk_params=disk_params,
+        transition_id=transition_id,
+        runs=runs_list,
+    )
 
 
 @main.route("/runs/")
@@ -94,7 +152,22 @@ def runs():
     with db.begin():
         # create a giant join to get all the important run properties
 
-        s = select([schema.runs])
+        j = (
+            schema.runs.join(schema.run_statuses)
+            .join(schema.measurement_sets)
+            .join(schema.disks)
+            .join(schema.transitions)
+        )
+        s = select(
+            [
+                schema.runs,
+                schema.run_statuses.c.run_status,
+                schema.disks.c.disk_name,
+                schema.transitions.c.transition_id,
+                schema.transitions.c.molecule_name,
+                schema.transitions.c.quantum_number,
+            ]
+        ).select_from(j)
         result = db.execute(s)
         runs_list = result.fetchall()
 

@@ -1,21 +1,15 @@
 {% extends "table.html" %}
 
-{% block title %}Runs on the Cannon Cluster{% endblock %}
+{% block title %}{{ disk_params.disk_name }} Transition:{{ transition_id }} {% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>MAPS Runs</h1>
-    <p>This page catalogs all imaging attempts carried out on the MAPS dataset. The <code>run_id</code> is a unique
-        primary key
-        assigned to every new invocation of an imaging script to a particular disk / transition / measurement set
-        combination. If you would like to refer precisely and uniquely to the products of a particular imaging attempt,
-        quoting the <code>run_id</code> is the best way to do it. You can
-        click on the <code>run_id</code> in the table below to be taken to the summary page for that run. Alternatively,
-        if you already know the <code>run_id</code>, you can navigate to the summary page directly by substituting it in
-        the
-        address like so:
-        <code>thiswebsite.com/runs/run_id/</code></p>
+    <h1>{{ disk_params.disk_name }} Transition:{{ transition_id }}</h1>
 </div>
+
+<h2>Available measurement sets</h2>
+
+<h2>All runs for this disk/transition combo</h2>
 
 <div>
     <table id="table_id" class="display">
@@ -23,7 +17,6 @@
             <tr>
                 <th>Run ID</th>
                 <th>Disk Name</th>
-                <th>Transition ID</th>
                 <th>Mol Name</th>
                 <th>QN</th>
                 <th>Array ID</th>
@@ -36,7 +29,6 @@
             <tr>
                 <td><a href={{ url_for('main.run', run_id=run.run_id) }}>{{run.run_id}}</a></td>
                 <td>{{run.disk_name}}</td>
-                <td>{{run.transition_id}}</td>
                 <td>{{run.molecule_name}}</td>
                 <td>{{run.quantum_number}}</td>
                 <td>{{run.job_array_id}}</td>

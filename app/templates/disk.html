@@ -1,0 +1,53 @@
+{% extends "table.html" %}
+
+{% block title %}{{ disk_params.disk_name }} {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>{{ disk_params.disk_name }}</h1>
+</div>
+
+<h2>Disk parameters</h2>
+<div class="container-sm">
+    <ul class="list-group">
+        {% for key, value in disk_params.items() %}
+        <li class="list-group-item"><strong>{{key}}</strong> : {{value}}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+<h2>Transitions with available {{disk_params.disk_name}} measurement sets</h2>
+
+To visit the summary page for the transition, click on the linked <code>transition_id</code>.
+<div>
+    <table id="table_id" class="display">
+        <thead>
+            <tr>
+                <th>Transition ID</th>
+                <th>Mol Name</th>
+                <th>QN</th>
+                <th>MS ID</th>
+                <td>Version</td>
+                <td>Number of runs</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ms in ms_list %}
+            <tr>
+                <td><a
+                        href={{ url_for('main.disk_transition', disk_id=disk_params.disk_id, transition_id=ms.transition_id) }}>{{ms.transition_id}}</a>
+                </td>
+                <td>{{ms.molecule_name}}</td>
+                <td>{{ms.quantum_number}}</td>
+                <td>{{ms.measurement_set_id}}</td>
+                <td>{{ms.version}}</td>
+                <td>TK</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock page_content %}

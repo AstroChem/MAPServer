@@ -2,52 +2,150 @@
 
 {% block title %}{{ disk_params.disk_name }} {% endblock %}
 
-{% block page_content %}
-<div class="page-header">
-    <h1>{{ disk_params.disk_name }}</h1>
+{% block styles %}
+{{ super() }}
+<style>
+    #disk-params-list {
+        max-width: 600px;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>{{ disk_params.disk_name }}</h1>
+    </div>
 </div>
 
-<h2>Disk parameters</h2>
-<div class="container-sm">
-    <ul class="list-group">
-        {% for key, value in disk_params.items() %}
-        <li class="list-group-item"><strong>{{key}}</strong> : {{value}}</li>
-        {% endfor %}
-    </ul>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2>Disk parameters</h2>
+        </div>
+    </div>
+    <div class="row" id="disk-params-list">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Param</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Units</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>disk_id</td>
+                    <td>{{disk_params.disk_id}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>distance</td>
+                    <td>{{ "%.1f" | format(disk_params.distance)}}</td>
+                    <td>pc</td>
+                </tr>
+                <tr>
+                    <td>inclination</td>
+                    <td>{{ "%.1f" | format(disk_params.incl)}}</td>
+                    <td>degrees</td>
+                </tr>
+                <tr>
+                    <td>position angle</td>
+                    <td>{{ "%.1f" | format(disk_params.PA)}}</td>
+                    <td>degrees</td>
+                </tr>
+                <tr>
+                    <td>T_eff</td>
+                    <td>{{ "%.0f" | format(disk_params.T_eff)}}</td>
+                    <td>Kelvin</td>
+                </tr>
+                <tr>
+                    <td>L_star</td>
+                    <td>{{ "%.2f" | format(disk_params.L_star)}}</td>
+                    <td>L_sun</td>
+                </tr>
+                <tr>
+                    <td>M_star</td>
+                    <td>{{ "%.1f" | format(disk_params.M_star)}}</td>
+                    <td>M_sun</td>
+                </tr>
+                <tr>
+                    <td>logMdot</td>
+                    <td>{{ "%.2f" | format(disk_params.logMdot)}}</td>
+                    <td>log(M_sun/yr)</td>
+                </tr>
+                <tr>
+                    <td>v_sys</td>
+                    <td>{{ "%.3f" | format(disk_params.v_sys)}}</td>
+                    <td>km/s LSRK</td>
+                </tr>
+                <tr>
+                    <td>CO_ext</td>
+                    <td>{{ "%.2f" | format(disk_params.CO_ext)}}</td>
+                    <td>diameter arcsec</td>
+                </tr>
+                <tr>
+                    <td>Centroid</td>
+                    <td>{{disk_params.RA_center}}, {{disk_params.Dec_center}}</td>
+                    <td>celestial</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+
+<div class="container-lg">
+    <div class="row">
+        <div class="col">
+            <h2>Transitions with available {{disk_params.disk_name}} measurement sets</h2>
+
+            To visit the summary page for the transition, click on the linked <code>transition_id</code>.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table id="table_id" class="display">
+                <thead>
+                    <tr>
+                        <th>Transition ID</th>
+                        <th>Mol Name</th>
+                        <th>QN</th>
+                        <th>Frequency (GHz)</th>
+                        <th>Number of runs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ms in ms_list %}
+                    <tr>
+                        <td><a
+                                href={{ url_for('main.disk_transition', disk_id=disk_params.disk_id, transition_id=ms.transition_id) }}>{{ms.transition_id}}</a>
+                        </td>
+                        <td>{{ms.molecule_name}}</td>
+                        <td>{{ms.quantum_number}}</td>
+                        <td>{{ "%.6f"| format(ms.frequency) }}</td>
+                        <td>{{ms.run_count}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 
-<h2>Transitions with available {{disk_params.disk_name}} measurement sets</h2>
+{% endblock content %}
 
-To visit the summary page for the transition, click on the linked <code>transition_id</code>.
-<div>
-    <table id="table_id" class="display">
-        <thead>
-            <tr>
-                <th>Transition ID</th>
-                <th>Mol Name</th>
-                <th>QN</th>
-                <th>MS ID</th>
-                <td>Version</td>
-                <td>Number of runs</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ms in ms_list %}
-            <tr>
-                <td><a
-                        href={{ url_for('main.disk_transition', disk_id=disk_params.disk_id, transition_id=ms.transition_id) }}>{{ms.transition_id}}</a>
-                </td>
-                <td>{{ms.molecule_name}}</td>
-                <td>{{ms.quantum_number}}</td>
-                <td>{{ms.measurement_set_id}}</td>
-                <td>{{ms.version}}</td>
-                <td>TK</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+{% block scripts_table %}
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+            "pageLength": 25,
+            "order": [[4, 'desc']]
+        });
+    });
 
-
-{% endblock page_content %}
+</script>
+{% endblock scripts_table %}

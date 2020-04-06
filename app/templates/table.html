@@ -13,6 +13,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
 
+{% block scripts_table %}
 <script>
     $(document).ready(function () {
         $('#table_id').DataTable({
@@ -20,4 +21,5 @@
         });
     });
 </script>
+{% endblock scripts_table %}
 {% endblock scripts %}

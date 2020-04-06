@@ -26,7 +26,7 @@
                 <td>{{transition.transition_id}}</td>
                 <td>{{transition.molecule_name}}</td>
                 <td>{{transition.quantum_number}}</td>
-                <td>{{transition.frequency}}</td>
+                <td>{{ "%.6f"| format(transition.frequency)}}</td>
                 <td>{{transition.band_id}}</td>
                 <td>{{transition.spw_id}}</td>
                 <td>links to disk/transition/</td>
@@ -37,3 +37,15 @@
 </div>
 
 {% endblock page_content %}
+
+{% block scripts_table %}
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+            "pageLength": 25,
+            "order": [[4, 'asc']]
+        });
+    });
+
+</script>
+{% endblock scripts_table %}

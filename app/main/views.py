@@ -9,7 +9,7 @@ from flask import (
 )
 from . import main
 
-from sqlalchemy import select, join, and_
+from sqlalchemy import select, join, and_, func
 from mapsdb import schema
 
 from app.db import get_db
@@ -73,6 +73,7 @@ def disk(disk_id):
     """
     Display the summary page corresponding to a particular disk. List all the transitions available, and the links to their runs.
     """
+    print("disk_id", disk_id)
 
     db = get_db()
     with db.begin():
@@ -82,10 +83,21 @@ def disk(disk_id):
 
         # make a giant merge of all of the rows with this disk_id
         j = schema.measurement_sets.join(schema.disks).join(schema.transitions)
+        # do an outer join with the runs, since there will be measurement sets that do not
+        # have any runs
+        j_runs = j.outerjoin(schema.runs)
         s = (
-            select([schema.measurement_sets, schema.transitions])
-            .select_from(j)
+            select(
+                [
+                    # count the number of runs for each unique transition id
+                    func.count(schema.runs.c.run_id).label("run_count"),
+                    schema.measurement_sets,
+                    schema.transitions,
+                ]
+            )
+            .select_from(j_runs)
             .where(schema.disks.c.disk_id == disk_id)
+            .group_by(schema.transitions.c.transition_id)
         ).reduce_columns()
         result = db.execute(s)
         ms_list = result.fetchall()

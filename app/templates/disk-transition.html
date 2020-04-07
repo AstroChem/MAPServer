@@ -1,12 +1,18 @@
 {% extends "table.html" %}
 
-{% block title %}{{ combo_params.disk_name }} Transition:{{ combo_params.transition_id }} {% endblock %}
+{% block title %}{{ combo_params.disk_name }} {{ combo_params.molecule_name }} {{ combo_params.quantum_number}}
+{% endblock %}
 
 {% block page_content %}
 
 <div class="row">
     <div class="col">
-        <h1>{{ combo_params.disk_name }} Transition:{{ combo_params.transition_id }}</h1>
+        <h1>{{ combo_params.disk_name }} {{ combo_params.molecule_name }} {{ combo_params.quantum_number}}</h1>
+        <p>
+            Band: {{combo_params.band_id}}, Setup:
+            {{combo_params.setup_id}}, SPW: {{combo_params.spw_id}}, Frequency:
+            {{ "%.6f" | format(combo_params.frequency)}} GHz
+        </p>
         <p>This page summarizes all of the available measurement sets and analysis runs for a particular
             disk-transition combination.</p>
     </div>
@@ -14,8 +20,9 @@
 
 <div class="row">
     <div class="col">
-        <h2>All runs for this disk/transition combo</h2>
-
+        <h2>All runs for this particular disk/transition combination</h2>
+        <p>You can click on the <code>run_id</code> in the table below to be taken to the summary page for that run.
+        </p>
         <table id="table_runs" class="display">
             <thead>
                 <tr>
@@ -43,7 +50,7 @@
 
 <div class="row">
     <div class="col">
-        <h2>Available measurement sets</h2>
+        <h2>Available <code>cvel</code>'ed measurement sets on disk</h2>
         <table id="table_ms" class="display">
             <thead>
                 <tr>

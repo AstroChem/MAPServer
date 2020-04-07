@@ -1,10 +1,49 @@
 {% extends "base.html" %}
 
-{% block title %}Info for {{ run_id }}{% endblock %}
+{% block title %}Run {{ run_id }} Summary{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link href={{ url_for('static', filename="lightbox.css") }} rel="stylesheet" />
+
+<style>
+    .gallery {
+        margin: 10px 50px;
+    }
+
+    .gallery img {
+        width: 250px;
+        padding: 5px;
+        transition: 0.5s;
+    }
+
+    .gallery img:hover {
+        transform: scale(1.1);
+    }
+</style>
+
+{% endblock styles %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Summary for Run: {{run_id}}</h1>
+    <h1>Run {{run_id}} Summary</h1>
+    <p>
+        Disk: <a href={{ url_for('main.disk', disk_id=combo_params.disk_id) }}>{{combo_params.disk_name}}</a>;
+        Transition: <a
+            href={{ url_for('main.disk_transition', disk_id=combo_params.disk_id,
+                                                transition_id=combo_params.transition_id) }}>{{combo_params.molecule_name}}
+            {{combo_params.quantum_number}}</a>
+        ({{combo_params.frequency}} GHz); Measurement Set {{ combo_params.version}} id:
+        {{combo_params.measurement_set_id}}
+    </p>
+    <h3>Parameters</h3>
+    <p>
+        {% for (key, val) in run_parameters.items() %}
+        {% if val is not none %}
+        <strong>{{ key }}</strong> : {{val }} ;
+        {% endif %}
+        {% endfor %}
+    </p>
 </div>
 
 {{ bokeh_plot_div|safe }}
@@ -13,7 +52,20 @@
     Glossary of terms: tot = tot; nll = negative log likelihood; entropy = entropy loss.
 </div>
 
-{% endblock %}
+
+<div class="row">
+    <div class="col">
+        <h2>Images</h2>
+        <div class="gallery">
+            {% for image_path in image_paths %}
+            <a href={{ image_path }} data-lightbox="images" data-title="custom caption"><img src={{ image_path }}></a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock page_content %}
 
 
 {% block scripts %}
@@ -21,5 +73,18 @@
 <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"></script>
 <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.js"></script>
 <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.0.1.min.js"></script>
-{{ script|safe }}
+<script src={{ url_for('static', filename="lightbox-plus-jquery.min.js") }}></script>
+
+<script>
+    lightbox.option({
+        'fadeDuration': 300,
+        'imageFadeDuration': 0,
+        'resizeDuration': 100,
+        'wrapAround': true
+    })
+</script>
+
+{{ bokeh_script|safe }}
+
+
 {% endblock scripts %}}

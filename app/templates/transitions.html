@@ -5,19 +5,44 @@
 {% block page_content %}
 <div class="page-header">
     <h1>MAPS Transitions</h1>
+    <p>
+        This page catalogues all of the information about the transitions targeted in the MAPS large program. The
+        rightmost column contains links to the pages describing the imaging products for each disk. The button status
+        signifies the following
+    </p>
+    <div class=row>
+        <div class="col-md-6">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td><a class="btn btn-primary btn-sm" href="">HD 163296</a></td>
+                        <td>MS with runs available</td>
+                    </tr>
+                    <tr>
+                        <td><a class="btn btn-outline-primary btn-sm" href="">HD 163296</a></td>
+                        <td>MS available but no runs</td>
+                    </tr>
+                    <tr>
+                        <td><a class="btn btn-outline-secondary btn-sm disabled" href="">HD 163296</a></td>
+                        <td>Neither MS nor runs available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <div>
     <table id="table_id" class="display">
         <thead>
             <tr>
-                <th>Transition ID</th>
+                <th>Trans. ID</th>
                 <th>Molecule</th>
-                <th>Quantum Number</th>
-                <td>Frequency (GHz)</td>
-                <td>Band</td>
-                <td>SPW</td>
-                <td>Disks</td>
+                <th>Quant Num</th>
+                <th>Frequency (GHz)</th>
+                <th>Band</th>
+                <th>SPW</th>
+                <th>Disks</th>
             </tr>
         </thead>
         <tbody>
@@ -29,7 +54,29 @@
                 <td>{{ "%.6f"| format(transition.frequency)}}</td>
                 <td>{{transition.band_id}}</td>
                 <td>{{transition.spw_id}}</td>
-                <td>links to disk/transition/</td>
+                {# This column is to create a links back to the disk/transition page for each disk. 
+                    In the following row (<td></td>), we want to iterate among the (disk_name,disk_id) pairs,
+                    name the button the disk name, link to the url_for(disk_id, transition_id).
+                    We also want to color the button according to whether the MS exists on disk and 
+                    whether there are any runs for it. If there's no MS, don't show it. If there is an MS but no runs, make it secondary. So we need to create columns MS_count and RUN_count on transitions.
+                    I think the best way to do this is create a second dictionary in the views which is indexed by (disk_id, transition_id): {MS : bool, RUN: bool}.
+                    #}
+                <td>{% for item in disk_pairs %}
+                    {%  set ms_count, run_count = disk_transition_dict[(item[1], transition.transition_id)] %}
+                    {% if (ms_count > 0) and (run_count > 0) %}
+                    <a class="btn btn-primary btn-sm" href={{ url_for('main.disk_transition', disk_id=item[1],
+                                                transition_id=transition.transition_id) }}>{{item[0]}}</a>
+                    {% elif ms_count > 0 %}
+                    <a class="btn btn-outline-primary btn-sm"
+                        href={{ url_for('main.disk_transition', disk_id=item[1],
+                                                                    transition_id=transition.transition_id) }}>{{item[0]}}</a>
+                    {% else %}
+                    <a class="btn btn-outline-secondary btn-sm disabled"
+                        href={{ url_for('main.disk_transition', disk_id=item[1],
+                                                                    transition_id=transition.transition_id) }}>{{item[0]}}</a>
+                    {% endif %}
+                    {% endfor %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -42,8 +89,8 @@
 <script>
     $(document).ready(function () {
         $('#table_id').DataTable({
-            "pageLength": 25,
-            "order": [[4, 'asc']]
+            "pageLength": 50,
+            "order": [[3, 'asc']]
         });
     });
 

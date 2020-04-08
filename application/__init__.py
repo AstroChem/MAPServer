@@ -15,7 +15,10 @@ def create_app(test_config=None):
 
     if test_config is None:
         application.config.from_object("application.configuration.DevelopmentConfig")
-        application.config.from_pyfile("config.cfg")
+        # application.config.from_pyfile("config.cfg")
+        application.config.from_mapping(
+            MAPS_USER=os.environ["MAPS_USER"], MAPS_PASSWORD=os.environ["MAPS_PASSWORD"]
+        )
 
     else:
         # load the test config if passed in

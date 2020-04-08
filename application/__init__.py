@@ -14,7 +14,7 @@ def create_app(test_config=None):
     )
 
     if test_config is None:
-        application.config.from_object("app.configuration.DevelopmentConfig")
+        application.config.from_object("application.configuration.DevelopmentConfig")
         application.config.from_pyfile("config.cfg")
 
     else:

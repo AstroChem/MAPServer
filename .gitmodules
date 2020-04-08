@@ -1,0 +1,3 @@
+[submodule "MAPSDB"]
+	path = MAPSDB
+	url = https://github.com/AstroChem/MAPSDB.git

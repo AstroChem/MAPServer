@@ -5,3 +5,4 @@ flask-bootstrap
 sqlalchemy
 pandas
 bokeh
+git+git://github.com/AstroChem/MAPSDB.git

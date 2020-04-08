@@ -12,8 +12,8 @@ from . import main
 from sqlalchemy import select, join, and_, func, literal, desc, asc
 from mapsdb import schema
 
-from app.db import get_db
-from app.auth import login_required
+from application.db import get_db
+from application.auth import login_required
 
 
 import os

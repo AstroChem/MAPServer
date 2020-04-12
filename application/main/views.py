@@ -451,7 +451,36 @@ def cube(cube_id):
     return render_template("cube.html", image_paths=image_paths)
 
 
+@main.route("/glossary/")
+def glossary():
+    '''
+    List the id's with the corresponding type tables, like method implementations, methods, run_statuses.
+    '''
+    db = get_db()
+    with db.begin():
+        s = select([schema.disks.c.disk_id, schema.disks.c.disk_name])
+        result = db.execute(s)
+        disks_list = result.fetchall()
+
+        s = select([schema.run_statuses])
+        result = db.execute(s)
+        run_statuses_list = result.fetchall()
+
+
+        s = select([schema.method_types])
+        result = db.execute(s)
+        method_types_list = result.fetchall()
+
+        j = schema.method_implementations.join(schema.method_types)
+        s = select([schema.method_implementations, schema.method_types.c.method_type]).select_from(j)
+        result = db.execute(s)
+        method_implementations_list = result.fetchall()
+
+    return render_template("glossary.html", disks_list=disks_list, run_statuses_list=run_statuses_list, method_types_list=method_types_list, method_implementations_list=method_implementations_list)
+
 # this doesn't end in a slash because we are looking to mimic a filename
 @main.route("/<path:filename>")
 def send_file(filename):
     return send_from_directory(current_app.config["MAPS_ROOT"], filename)
+
+

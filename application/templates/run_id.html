@@ -36,6 +36,7 @@
         ({{combo_params.frequency}} GHz); Measurement Set {{ combo_params.version}} id:
         {{combo_params.measurement_set_id}}
     </p>
+    {% if run_parameters is not none %}
     <h3>Parameters</h3>
     <p>
         {% for (key, val) in run_parameters.items() %}
@@ -44,13 +45,15 @@
         {% endif %}
         {% endfor %}
     </p>
+    {% endif %}
 </div>
 
+{% if bokeh_plot_div is not none %}
 {{ bokeh_plot_div|safe }}
-
 <div>
     Glossary of terms: tot = tot; nll = negative log likelihood; entropy = entropy loss.
 </div>
+{% endif %}
 
 
 <div class="row">
@@ -84,7 +87,9 @@
     })
 </script>
 
+{% if bokeh_script is not none %}
 {{ bokeh_script|safe }}
+{% endif %}
 
 
 {% endblock scripts %}}

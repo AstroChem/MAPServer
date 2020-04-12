@@ -309,34 +309,38 @@ def run(run_id):
         rel_output_dir = result.first()[0]
 
     fname = os.path.join(current_app.config["MAPS_ROOT"], rel_output_dir, "losses.csv")
-    df = pd.read_csv(fname)
-    # drop the columns that are nan
-    df = df.dropna(axis=1)
-    source = ColumnDataSource(df)
+    if os.path.exists(fname):
+        df = pd.read_csv(fname)
+        # drop the columns that are nan
+        df = df.dropna(axis=1)
+        source = ColumnDataSource(df)
 
-    colors = itertools.cycle(palette)
+        colors = itertools.cycle(palette)
 
-    p = figure(title="Losses", x_axis_label="Iteration", y_axis_label="Loss")
-    for key in [
-        "tot",
-        "nll",
-        "entropy",
-        "sparsity",
-        "TV_image",
-        "TV_channel",
-        "UV_sparsity",
-    ]:
-        if key in df.columns:
-            p.line(
-                x="index",
-                y=key,
-                source=source,
-                line_width=2,
-                legend_label=key,
-                color=next(colors),
-            )
+        p = figure(title="Losses", x_axis_label="Iteration", y_axis_label="Loss")
+        for key in [
+            "tot",
+            "nll",
+            "entropy",
+            "sparsity",
+            "TV_image",
+            "TV_channel",
+            "UV_sparsity",
+        ]:
+            if key in df.columns:
+                p.line(
+                    x="index",
+                    y=key,
+                    source=source,
+                    line_width=2,
+                    legend_label=key,
+                    color=next(colors),
+                )
 
-    bokeh_script, bokeh_plot_div = components(p)
+        bokeh_script, bokeh_plot_div = components(p)
+    else:
+        bokeh_script = None
+        bokeh_plot_div = None
 
     # get the disk_parameters
     db = get_db()
@@ -418,8 +422,7 @@ def run(run_id):
         bokeh_script=bokeh_script,
         bokeh_plot_div=bokeh_plot_div,
     )
-
-
+    
 @main.route("/cube/<int:cube_id>/")
 # @main.route('/cube/<int:cube_id_1>/<int:cube_id_2>') # compare two cubes with slider
 def cube(cube_id):

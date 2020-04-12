@@ -51,3 +51,15 @@
 </div>
 
 {% endblock page_content %}
+
+{% block scripts_table %}
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+            "pageLength": 50,
+            "order": [[7, 'desc']]
+        });
+    });
+
+</script>
+{% endblock scripts_table %}

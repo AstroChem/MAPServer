@@ -476,7 +476,12 @@ def glossary():
         result = db.execute(s)
         method_implementations_list = result.fetchall()
 
-    return render_template("glossary.html", disks_list=disks_list, run_statuses_list=run_statuses_list, method_types_list=method_types_list, method_implementations_list=method_implementations_list)
+        s = select([schema.cube_types])
+        result = db.execute(s)
+        cube_types_list = result.fetchall()
+
+
+    return render_template("glossary.html", disks_list=disks_list, run_statuses_list=run_statuses_list, method_types_list=method_types_list, method_implementations_list=method_implementations_list, cube_types_list=cube_types_list)
 
 # this doesn't end in a slash because we are looking to mimic a filename
 @main.route("/<path:filename>")

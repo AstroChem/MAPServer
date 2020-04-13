@@ -278,11 +278,13 @@ def runs():
             .join(schema.measurement_sets)
             .join(schema.disks)
             .join(schema.transitions)
+            .join(schema.method_types)
         )
         s = select(
             [
                 schema.runs,
                 schema.run_statuses.c.run_status,
+                schema.method_types.c.method_type,
                 schema.disks.c.disk_name,
                 schema.transitions.c.transition_id,
                 schema.transitions.c.molecule_name,
@@ -422,7 +424,8 @@ def run(run_id):
         bokeh_script=bokeh_script,
         bokeh_plot_div=bokeh_plot_div,
     )
-    
+
+
 @main.route("/cube/<int:cube_id>/")
 # @main.route('/cube/<int:cube_id_1>/<int:cube_id_2>') # compare two cubes with slider
 def cube(cube_id):
@@ -453,9 +456,9 @@ def cube(cube_id):
 
 @main.route("/glossary/")
 def glossary():
-    '''
+    """
     List the id's with the corresponding type tables, like method implementations, methods, run_statuses.
-    '''
+    """
     db = get_db()
     with db.begin():
         s = select([schema.disks.c.disk_id, schema.disks.c.disk_name])
@@ -466,13 +469,14 @@ def glossary():
         result = db.execute(s)
         run_statuses_list = result.fetchall()
 
-
         s = select([schema.method_types])
         result = db.execute(s)
         method_types_list = result.fetchall()
 
         j = schema.method_implementations.join(schema.method_types)
-        s = select([schema.method_implementations, schema.method_types.c.method_type]).select_from(j)
+        s = select(
+            [schema.method_implementations, schema.method_types.c.method_type]
+        ).select_from(j)
         result = db.execute(s)
         method_implementations_list = result.fetchall()
 
@@ -481,11 +485,46 @@ def glossary():
         cube_types_list = result.fetchall()
 
 
-    return render_template("glossary.html", disks_list=disks_list, run_statuses_list=run_statuses_list, method_types_list=method_types_list, method_implementations_list=method_implementations_list, cube_types_list=cube_types_list)
+        j = schema.runs.join(schema.parameters).join(schema.method_types)   
+        s = (
+            select(
+                [
+                    func.count(schema.runs.c.run_id).label("run_count"),
+                    schema.method_types.c.method_type, # this is essentially chosen at random
+                    schema.parameters,
+                ]
+            )
+            .select_from(j)
+            .group_by(schema.parameters.c.parameter_id).reduce_columns()
+        )
+        result = db.execute(s)
+        parameters_list = result.fetchall()
+
+        key_list = result.keys()
+    
+    # create a header list excepting run_id and method_type
+    header_set = set(key_list)
+    header_set.remove('parameter_id')
+    header_set.remove('method_type')
+    header_set.remove('run_count')
+    header_set.remove('npix')
+    header_set.remove('cell_size')
+    
+
+
+    return render_template(
+        "glossary.html",
+        disks_list=disks_list,
+        run_statuses_list=run_statuses_list,
+        method_types_list=method_types_list,
+        method_implementations_list=method_implementations_list,
+        cube_types_list=cube_types_list,
+        parameters_list=parameters_list, 
+        parameters_header_set=header_set
+    )
+
 
 # this doesn't end in a slash because we are looking to mimic a filename
 @main.route("/<path:filename>")
 def send_file(filename):
     return send_from_directory(current_app.config["MAPS_ROOT"], filename)
-
-

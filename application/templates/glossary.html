@@ -5,9 +5,9 @@
 {% block page_content %}
 <div class="row">
     <div class="col">
-    <h1>Primary Key Glossary</h1>
+    <h1>Glossary</h1>
     <p>
-        Where possible, I have attempted to merge textual descriptions with the database primary keys. Still, there may be instances where the integer primary keys show up, so this page is designed to provide a reference for those cases.
+        Where possible, I have attempted to merge textual descriptions with the integer primary keys in the database. Still, there may be instances where there are integers, so this page is designed to provide a reference.
     </p>
 </div>
 </div>
@@ -171,6 +171,42 @@
     </table>
 </div>
 </div>
+
+<div class="row">
+    <div class="col">
+        <h1>Parameters</h1>
+        <p>This table shows all of the various parameter sets that were used to make rml and rml-dirty images.</p>
+    <table id="parameters_table_id" class="display">
+        <thead>
+            <tr>
+                <th>Parameter ID</th>
+                <th>Method type</th>
+                <th>Run count</th>
+                <th>npix</th>
+                <th>cell_size</th>
+                {% for key in parameters_header_set %}
+                <th>{{ key }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in parameters_list %}
+            <tr>
+                <td>{{row.parameter_id}}</td>
+                <td>{{row.method_type}}</td>
+                <td>{{row.run_count}}</td>
+                <td>{{row.npix}}</td>
+                <td>{{row.cell_size}}</td>
+                {% for key in parameters_header_set %}
+                <td>{{row[key]}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
                 
 {% endblock page_content %}
 
@@ -207,6 +243,13 @@
 
     $(document).ready(function () {
         $('#cube_types_table_id').DataTable({
+            "pageLength": 25,
+            "order": [[0, 'asc']]
+        });
+    });
+
+    $(document).ready(function () {
+        $('#parameters_table_id').DataTable({
             "pageLength": 25,
             "order": [[0, 'asc']]
         });

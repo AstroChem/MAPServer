@@ -5,4 +5,4 @@ flask-bootstrap
 sqlalchemy
 pandas
 bokeh
-/opt/python/ondeck/app/MAPSDB/
+./MAPSDB

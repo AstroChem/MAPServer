@@ -1,5 +1,5 @@
-source venv-lepus/bin/activate
-export SQLALCHEMY_DATABASE_URI="sqlite:////Volumes/mac-bdata/MAPS-LP/MAPS/MAPS.db"
-export MAPS_ROOT="/Volumes/mac-bdata/MAPS-LP/MAPS/"
+source venv/bin/activate
+export SQLALCHEMY_DATABASE_URI="sqlite:////Users/ian/Documents/Research/Disks/MAPS-LP/data/RML-products/MAPS/MAPS.db"
+export MAPS_ROOT="/Users/ian/Documents/Research/Disks/MAPS-LP/data/RML-products/MAPS/"
 export FLASK_APP=application.py
 export FLASK_ENV=development

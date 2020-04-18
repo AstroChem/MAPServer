@@ -1,7 +1,6 @@
 numpy
 matplotlib
 flask
-flask-bootstrap
 sqlalchemy
 pandas
 bokeh

@@ -131,15 +131,13 @@ dmypy.json
 # vscode
 .vscode/
 
-venv-imac/
-venv-lepus/
+venv/
 
 instance/
 htmlcov/
 dist/
 build/
 *.egg-info/
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+
+setup_lepus.sh
+start_docker.sh

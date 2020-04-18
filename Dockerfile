@@ -14,7 +14,8 @@ RUN python3 -m venv venv
 
 # copy the application files to the container 
 COPY application application
-COPY application.py instance boot.sh ./
+COPY instance instance
+COPY maps.py boot.sh ./
 COPY MAPSDB MAPSDB
 RUN chmod +x boot.sh
 
@@ -23,7 +24,7 @@ RUN venv/bin/pip install wheel
 RUN venv/bin/pip install -r requirements.txt
 RUN venv/bin/pip install gunicorn
 
-ENV FLASK_APP application.py
+ENV FLASK_APP maps.py
 
 # set all the files in the directory to the maps user
 # and change to this user

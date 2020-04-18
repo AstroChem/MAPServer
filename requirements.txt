@@ -4,4 +4,4 @@ flask
 sqlalchemy
 pandas
 bokeh
-./MAPSDB
+git+git://github.com/AstroChem/MAPSDB@master#egg=MAPSDB

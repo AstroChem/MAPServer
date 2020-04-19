@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 MAINTAINER Ian Czekala "iancze@gmail.com"
 
 RUN apt-get update -y && \
-    apt-get install -y python3-pip python3-dev python3-venv
+    apt-get install -y python3-pip python3-dev python3-venv git
 
 RUN adduser maps
 

@@ -26,7 +26,7 @@ def login():
 
         error = None
 
-        if username == "ALMA-MAPS":
+        if username == current_app.config.get("MAPS_USER"):
             if not check_password_hash(
                 current_app.config.get("MAPS_HASHED_PASSWORD"), password
             ):

@@ -14,9 +14,7 @@ RUN python3 -m venv venv
 
 # copy the application files to the container 
 COPY application application
-COPY instance instance
 COPY maps.py boot.sh ./
-COPY MAPSDB MAPSDB
 RUN chmod +x boot.sh
 
 # install the application dependencies, which includes MAPSDB, into venv

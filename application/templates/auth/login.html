@@ -5,19 +5,31 @@
 {% endblock %}
 
 {% block page_content %}
-<form method="post">
-  <label for="username">Username</label>
-  <input name="username" id="username" required>
-  <label for="password">Password</label>
-  <input type="password" name="password" id="password" required>
-  <input type="submit" value="Log In">
-</form>
-<p>
-  Welcome to the website for the ALMA MAPS (Molecules with ALMA on Planet-forming Scales) large program, P.I.'d by Prof.
-  Karin &Ouml;berg, Edwin Bergin, Catherine Walsh, Yuri Aikawa, and Viviana Guzman. If you have questions about the
-  large program in general, please direct them to <a href="mailto:koberg@cfa.harvard.edu">koberg@cfa.harvard.edu</a>. If
-  you are a member of the collaboration and you
-  are having difficulty accessing these webpages, please contact Ian Czekala <a
-    href="iczekala@berkeley.edu">iczekala@berkeley.edu</a>.
-</p>
+<div class="row">
+  <div class="col-md-4">
+    <form method="post">
+      <p>
+        <label for="username">Username</label>
+        <input name="username" id="username" required>
+      </p>
+      <p>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+        <input type="submit" value="Log In">
+      </p>
+    </form>
+  </div>
+  <div class="col-md-8">
+    <p>
+      Welcome to the website for the ALMA MAPS (Molecules with ALMA on Planet-forming Scales) large program, P.I.'d by
+      Karin &Ouml;berg, Edwin Bergin, Catherine Walsh, Yuri Aikawa, and Viviana Guzman. If you have questions about the
+      large program in general, please direct them to <a
+        href="mailto:koberg@cfa.harvard.edu">koberg@cfa.harvard.edu</a>.
+      If
+      you are a member of the collaboration and you
+      are having difficulty accessing these webpages, please contact Ian Czekala <a
+        href="iczekala@berkeley.edu">iczekala@berkeley.edu</a>.
+    </p>
+  </div>
+</div>
 {% endblock page_content %}

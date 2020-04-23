@@ -405,7 +405,7 @@ def run(run_id):
                     (schema.cubes.c.cube_type_id == 0), (schema.runs.c.run_id == run_id)
                 )
             )
-            .order_by(asc(schema.cube_images.c.frequency))
+            .order_by(desc(schema.cube_images.c.frequency))
         )
 
         result = db.execute(s)
@@ -483,34 +483,31 @@ def glossary():
         s = select([schema.cube_types])
         result = db.execute(s)
         cube_types_list = result.fetchall()
-
-
-        j = schema.runs.join(schema.parameters).join(schema.method_types)   
+        j = schema.runs.join(schema.parameters).join(schema.method_types)
         s = (
             select(
                 [
                     func.count(schema.runs.c.run_id).label("run_count"),
-                    schema.method_types.c.method_type, # this is essentially chosen at random
+                    schema.method_types.c.method_type,  # this is essentially chosen at random
                     schema.parameters,
                 ]
             )
             .select_from(j)
-            .group_by(schema.parameters.c.parameter_id).reduce_columns()
+            .group_by(schema.parameters.c.parameter_id)
+            .reduce_columns()
         )
         result = db.execute(s)
         parameters_list = result.fetchall()
 
         key_list = result.keys()
-    
+
     # create a header list excepting run_id and method_type
     header_set = set(key_list)
-    header_set.remove('parameter_id')
-    header_set.remove('method_type')
-    header_set.remove('run_count')
-    header_set.remove('npix')
-    header_set.remove('cell_size')
-    
-
+    header_set.remove("parameter_id")
+    header_set.remove("method_type")
+    header_set.remove("run_count")
+    header_set.remove("npix")
+    header_set.remove("cell_size")
 
     return render_template(
         "glossary.html",
@@ -519,8 +516,8 @@ def glossary():
         method_types_list=method_types_list,
         method_implementations_list=method_implementations_list,
         cube_types_list=cube_types_list,
-        parameters_list=parameters_list, 
-        parameters_header_set=header_set
+        parameters_list=parameters_list,
+        parameters_header_set=header_set,
     )
 
 

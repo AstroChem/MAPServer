@@ -141,3 +141,4 @@ build/
 
 setup_lepus.sh
 start_docker.sh
+.pgsql_passwd

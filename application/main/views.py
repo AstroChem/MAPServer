@@ -136,8 +136,6 @@ def disks():
         result = db.execute(s)
         disks_list = result.fetchall()
 
-    print(disks_list)
-
     return render_template("disks.html", disks=disks_list)
 
 
@@ -146,7 +144,6 @@ def disk(disk_id):
     """
     Display the summary page corresponding to a particular disk. List all the transitions available, and the links to their runs.
     """
-    print("disk_id", disk_id)
 
     db = get_db()
     with db.begin():
@@ -164,14 +161,15 @@ def disk(disk_id):
                 [
                     # count the number of runs for each unique transition id
                     func.count(schema.runs.c.run_id).label("run_count"),
-                    schema.measurement_sets,
                     schema.transitions,
                 ]
             )
+            .reduce_columns()
             .select_from(j_runs)
             .where(schema.disks.c.disk_id == disk_id)
             .group_by(schema.transitions.c.transition_id)
-        ).reduce_columns()
+        )
+
         result = db.execute(s)
         ms_list = result.fetchall()
 
@@ -253,8 +251,6 @@ def disk_transition(disk_id, transition_id):
         result = db.execute(s)
         runs_list = result.fetchall()
 
-        print(result.keys())
-
     return render_template(
         "disk-transition.html",
         combo_params=combo_params,
@@ -278,19 +274,25 @@ def runs():
             .join(schema.measurement_sets)
             .join(schema.disks)
             .join(schema.transitions)
+            .join(schema.method_implementations)
             .join(schema.method_types)
         )
-        s = select(
-            [
-                schema.runs,
-                schema.run_statuses.c.run_status,
-                schema.method_types.c.method_type,
-                schema.disks.c.disk_name,
-                schema.transitions.c.transition_id,
-                schema.transitions.c.molecule_name,
-                schema.transitions.c.quantum_number,
-            ]
-        ).select_from(j)
+        s = (
+            select(
+                [
+                    schema.runs,
+                    schema.run_statuses.c.run_status,
+                    schema.method_implementations,
+                    schema.method_types.c.method_type,
+                    schema.disks.c.disk_name,
+                    schema.transitions.c.transition_id,
+                    schema.transitions.c.molecule_name,
+                    schema.transitions.c.quantum_number,
+                ]
+            )
+            .reduce_columns()
+            .select_from(j)
+        )
         result = db.execute(s)
         runs_list = result.fetchall()
 
@@ -385,9 +387,7 @@ def run(run_id):
             .where(schema.runs.c.run_id == run_id)
         ).reduce_columns()
         result = db.execute(s)
-        print(result.keys())
         cubes_list = result.fetchall()
-        print("cubes_list", cubes_list)
 
         # go through and produce a nested list of cube, cube_images
 
@@ -411,8 +411,6 @@ def run(run_id):
         result = db.execute(s)
         cube_images = result.fetchall()
         image_paths = ["/" + cube_image["image_path"] for cube_image in cube_images]
-
-        print(image_paths)
 
     return render_template(
         "run_id.html",
@@ -483,7 +481,11 @@ def glossary():
         s = select([schema.cube_types])
         result = db.execute(s)
         cube_types_list = result.fetchall()
-        j = schema.runs.join(schema.parameters).join(schema.method_types)
+        j = (
+            schema.runs.join(schema.parameters)
+            .join(schema.method_implementations)
+            .join(schema.method_types)
+        )
         s = (
             select(
                 [
@@ -493,7 +495,9 @@ def glossary():
                 ]
             )
             .select_from(j)
-            .group_by(schema.parameters.c.parameter_id)
+            .group_by(
+                schema.parameters.c.parameter_id, schema.method_types.c.method_type
+            )
             .reduce_columns()
         )
         result = db.execute(s)

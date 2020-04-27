@@ -6,15 +6,16 @@ Flask website hosting TCLEAN and RML image products.
 You can start the docker container using a script including the following lines: 
 
     # the location of the MAPS folder lab share
-    MAPS_ROOT_SOURCE="/home/ian/MAPS_Share/MAPS"
+    export MAPS_ROOT_SOURCE="/n/oberg_lab/MAPS"
+    export MAPS_ROOT_SOURCE="/Users/ian/Documents/Research/Disks/MAPS-LP/data/RML-products/MAPS"
 
     # the mount point inside the docker container
-    MAPS_ROOT_CONTAINER="/home/maps/extern"
+    export MAPS_ROOT_CONTAINER="/home/maps/extern"
 
     # start the image and use a bind mount to give access to the lab share inside the container
-    docker run --name maps -d -p 8000:5000 -e SQLALCHEMY_DATABASE_URI="sqlite:///${MAPS_ROOT_CONTAINER}/MAPS.db" -e MAPS_ROOT="${MAPS_ROOT_CONTAINER}/" -e MAPS_USER="test-username" -e MAPS_PASSWORD="test-password" --mount type=bind,source=${MAPS_ROOT_SOURCE},target=${MAPS_ROOT_CONTAINER},readonly iancze/maps:latest
+    docker run --name maps -d -p 8000:5000 -e SQLALCHEMY_DATABASE_URI=POSTGRES_URI -e MAPS_ROOT="${MAPS_ROOT_CONTAINER}/" -e MAPS_USER="test-username" -e MAPS_PASSWORD="test-password" --mount type=bind,source=${MAPS_ROOT_SOURCE},target=${MAPS_ROOT_CONTAINER},readonly iancze/maps:latest
 
-## Testing the server locally outside of Docker
+## Testing the server locally outside of Docker (flask run)
 
 activate the virtual environment
     
@@ -22,7 +23,7 @@ activate the virtual environment
 
 set up the database connection 
     
-    $ export SQLALCHEMY_DATABASE_URI="sqlite:////Users/ianczekala/Documents/MAPS-LP/MAPS/MAPS.db"
+    $ export SQLALCHEMY_DATABASE_URI=POSTGRES_URI
 
 set up and run flask
     

@@ -57,12 +57,15 @@
 
 
 <div class="row">
-        <h2>Images</h2>
-        <div class="gallery">
-            {% for image_path in image_paths %}
-            <a href={{ image_path }} data-lightbox="images" data-title="custom caption"><img src={{ image_path }}></a>
-            {% endfor %}
-        </div>
+    <h2>Images</h2>
+    <div class="gallery">
+        {% for image_path in image_paths %}
+        <a href={{ image_path }} data-lightbox="images" data-title="custom caption"><img src={{ image_path }}></a>
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+    <h2>UV Plots</h2>
 </div>
 
 

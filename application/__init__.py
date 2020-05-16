@@ -8,13 +8,11 @@ from . import db
 
 
 def create_app(test_config=None):
-    application = Flask(__name__, instance_relative_config=True)
-    application.config.from_mapping(
-        SECRET_KEY="dev", DATABASE=os.environ["SQLALCHEMY_DATABASE_URI"]
-    )
+    application = Flask(__name__)
+    application.config.from_mapping(DATABASE=os.environ["SQLALCHEMY_DATABASE_URI"])
 
     if test_config is None:
-        application.config.from_object("application.configuration.DevelopmentConfig")
+        application.config.from_object("application.configuration.Config")
         application.config.from_mapping(
             MAPS_USER=os.environ["MAPS_USER"], MAPS_PASSWORD=os.environ["MAPS_PASSWORD"]
         )

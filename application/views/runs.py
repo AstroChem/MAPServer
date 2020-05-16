@@ -82,6 +82,7 @@ def run(run_id):
         result = db.execute(s)
         rel_output_dir = result.first()[0]
 
+    # load the file and use bokeh to make a figure of loss rates
     fname = os.path.join(current_app.config["MAPS_ROOT"], rel_output_dir, "losses.csv")
     if os.path.exists(fname):
         df = pd.read_csv(fname)
@@ -149,6 +150,17 @@ def run(run_id):
         )
         run_parameters = db.execute(s).first()
 
+        # assemble run statistics
+        s = select(
+            [
+                schema.runs.c.bkgd_mean,
+                schema.runs.c.bkgd_rms,
+                schema.runs.c.peak_flux,
+                schema.runs.c.tot_flux,
+            ]
+        ).where(schema.runs.c.run_id == run_id)
+        run_stats = db.execute(s).first()
+
         # get all cubes produced for this run
         j = schema.cubes.join(schema.runs).join(schema.cube_types)
         s = (
@@ -187,6 +199,7 @@ def run(run_id):
         cube_types=cube_types,
         combo_params=combo_params,
         run_parameters=run_parameters,
+        run_stats=run_stats,
         run_id=run_id,
         image_paths=image_paths,
         bokeh_script=bokeh_script,

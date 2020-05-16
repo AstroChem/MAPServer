@@ -46,6 +46,16 @@
         {% endfor %}
     </p>
     {% endif %}
+    {% if run_stats is not none %}
+    <h3>Run Stats</h3>
+    <p>
+        {% for (key, val) in run_stats.items() %}
+        {% if val is not none %}
+        <strong>{{ key }}</strong> : {{val }} Jy/arcsec^2 ;
+        {% endif %}
+        {% endfor %}
+    </p>
+    {% endif %}
 </div>
 
 {% if bokeh_plot_div is not none %}
@@ -64,10 +74,6 @@
         {% endfor %}
     </div>
 </div>
-<div class="row">
-    <h2>UV Plots</h2>
-</div>
-
 
 {% endblock page_content %}
 

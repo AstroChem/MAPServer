@@ -65,15 +65,15 @@
                     <td>{% for item in disk_pairs %}
                         {%  set ms_count, run_count = disk_transition_dict[(item[1], transition.transition_id)] %}
                         {% if (ms_count > 0) and (run_count > 0) %}
-                        <a class="btn btn-primary btn-sm" href={{ url_for('main.disk_transition', disk_id=item[1],
+                        <a class="btn btn-primary btn-sm" href={{ url_for('disks.disk_transition', disk_id=item[1],
                                                 transition_id=transition.transition_id) }}>{{item[0]}}</a>
                         {% elif ms_count > 0 %}
                         <a class="btn btn-outline-primary btn-sm"
-                            href={{ url_for('main.disk_transition', disk_id=item[1],
+                            href={{ url_for('disks.disk_transition', disk_id=item[1],
                                                                     transition_id=transition.transition_id) }}>{{item[0]}}</a>
                         {% else %}
                         <a class="btn btn-outline-secondary btn-sm disabled"
-                            href={{ url_for('main.disk_transition', disk_id=item[1],
+                            href={{ url_for('disks.disk_transition', disk_id=item[1],
                                                                     transition_id=transition.transition_id) }}>{{item[0]}}</a>
                         {% endif %}
                         {% endfor %}

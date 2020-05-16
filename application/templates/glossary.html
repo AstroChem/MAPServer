@@ -5,68 +5,83 @@
 {% block page_content %}
 <div class="row">
     <div class="col">
-    <h1>Glossary</h1>
-    <p>
-        Where possible, I have attempted to merge textual descriptions with the integer primary keys in the database. Still, there may be instances where there are integers, so this page is designed to provide a reference.
-    </p>
-</div>
+        <h1>Glossary</h1>
+        <p>
+            Where possible, I have attempted to merge textual descriptions with the integer primary keys in the
+            database. Still, there may be instances where there are integers, so this page is designed to provide a
+            reference.
+        </p>
+    </div>
 </div>
 <div class="row">
     <div class="col">
         <h2>Disks</h2>
-        <p>These are the <code>disk_id</code> codes corresponding to each disk. More information is available on the individual disk pages, accessed through the <a href={{ url_for('main.disks') }}>disk overview page</a>.</p>
+        <p>These are the <code>disk_id</code> codes corresponding to each disk. More information is available on the
+            individual disk pages, accessed through the <a href={{ url_for('disks.disks') }}>disk overview page</a>.</p>
     </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-    <table id="disks_table_id" class="display">
-        <thead>
-            <tr>
-                <th>Disk Name</th>
-                <th>Disk ID</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for disk in disks_list %}
-            <tr>
-                <td>{{disk.disk_name}}</td>
-                <td>{{disk.disk_id}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        <table id="disks_table_id" class="display">
+            <thead>
+                <tr>
+                    <th>Disk Name</th>
+                    <th>Disk ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for disk in disks_list %}
+                <tr>
+                    <td>{{disk.disk_name}}</td>
+                    <td>{{disk.disk_id}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 <div class="row">
     <div class="col">
         <h2>Transitions</h2>
-        <p>The best place to find the corresponding <code>transition_id</code> for each molecule / quantum number pair is on the <a href={{ url_for('main.transitions') }}>transitions overview page</a>.</p>
+        <p>The best place to find the corresponding <code>transition_id</code> for each molecule / quantum number pair
+            is on the <a href={{ url_for('disks.transitions') }}>transitions overview page</a>.</p>
     </div>
 </div>
 <div class="row">
     <div class="col">
         <h2>Runs</h2>
-        <p>For an overview of all runs, visit the <a href={{ url_for('main.runs') }}>runs page</a>. To access a specific run by its <code>run_id</code>, you can navigate directly to the summary page by substituting it in the address like so <code>/runs/&lt;run_id&gt;/</code>, e.g. <code>/runs/1/</code>.
+        <p>For an overview of all runs, visit the <a href={{ url_for('runs.runs') }}>runs page</a>. To access a specific
+            run by its <code>run_id</code>, you can navigate directly to the summary page by substituting it in the
+            address like so <code>/runs/&lt;run_id&gt;/</code>, e.g. <code>/runs/1/</code>.
         </p>
-        <p>To find only the runs and measurement sets corresponding to a particular disk/transition combination, you will want to visit the page corresponding to this disk/transition combination. There are currently three ways to access these pages. Some ways may be easier than others depending on what you are searching for.
+        <p>To find only the runs and measurement sets corresponding to a particular disk/transition combination, you
+            will want to visit the page corresponding to this disk/transition combination. There are currently three
+            ways to access these pages. Some ways may be easier than others depending on what you are searching for.
         </p>
         <ul>
             <li>
-                Visit the disk overview page corresponding to the disk in question. On this page there is a table listing the transitions that have available measurement sets for this particular disk. If you click on the <code>transition_id</code> linked in the first column you will be brought to the disk/transition summary page.
+                Visit the disk overview page corresponding to the disk in question. On this page there is a table
+                listing the transitions that have available measurement sets for this particular disk. If you click on
+                the <code>transition_id</code> linked in the first column you will be brought to the disk/transition
+                summary page.
             </li>
             <li>
-                Visit the <a href={{ url_for('main.transitions') }}>transitions overview page</a>. In the rightmost column ("Disks") there are button links for the corresponding disk/transition combination pages. The buttons are greyed out if no measurement sets or runs are available.
+                Visit the <a href={{ url_for('disks.transitions') }}>transitions overview page</a>. In the rightmost
+                column ("Disks") there are button links for the corresponding disk/transition combination pages. The
+                buttons are greyed out if no measurement sets or runs are available.
             </li>
             <li>
-                If you know the <code>disk_id</code> and <code>transition_id</code>, these pages can be accessed directly via the url <code>/disks/&lt;disk_id&gt;/transitions/&lt;transition_id&gt;/</code>, e.g., <code>/disks/1/transitions/32/</code> for GM Aur, C18O 2-1.</p>
+                If you know the <code>disk_id</code> and <code>transition_id</code>, these pages can be accessed
+                directly via the url <code>/disks/&lt;disk_id&gt;/transitions/&lt;transition_id&gt;/</code>, e.g.,
+                <code>/disks/1/transitions/32/</code> for GM Aur, C18O 2-1.</p>
             </li>
         </ul>
     </div>
 </div>
 <div class="row">
     <div class="col">
-    <h2>Run Statuses</h2>
-</div>
+        <h2>Run Statuses</h2>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
@@ -90,124 +105,124 @@
 </div>
 <div class="row">
     <div class="col">
-    <h2>Method Types</h2>    
-</div>
+        <h2>Method Types</h2>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-    <table id="method_types_table_id" class="display">
-        <thead>
-            <tr>
-                <th>Method Type ID</th>
-                <th>Method Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in method_types_list %}
-            <tr>
-                <td>{{row.method_type_id}}</td>
-                <td>{{row.method_type}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        <table id="method_types_table_id" class="display">
+            <thead>
+                <tr>
+                    <th>Method Type ID</th>
+                    <th>Method Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in method_types_list %}
+                <tr>
+                    <td>{{row.method_type_id}}</td>
+                    <td>{{row.method_type}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 <div class="row">
     <div class="col">
-    <h2>Method Implementations</h2>
-    <p>
-        Combinations of method types and versions.
-    </p>
-</div>
+        <h2>Method Implementations</h2>
+        <p>
+            Combinations of method types and versions.
+        </p>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-    <table id="method_implementations_table_id" class="display">
-        <thead>
-            <tr>
-                <th>Method Type ID</th>
-                <th>(Method Type)</th>
-                <th>Method Implementation</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in method_implementations_list %}
-            <tr>
-                <td>{{row.method_type_id}}</td>
-                <td>{{row.method_type}}</td>
-                <td>{{row.method_version}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        <table id="method_implementations_table_id" class="display">
+            <thead>
+                <tr>
+                    <th>Method Type ID</th>
+                    <th>(Method Type)</th>
+                    <th>Method Implementation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in method_implementations_list %}
+                <tr>
+                    <td>{{row.method_type_id}}</td>
+                    <td>{{row.method_type}}</td>
+                    <td>{{row.method_version}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 <div class="row">
     <div class="col">
-    <h2>Cube Types</h2>
-    <p>
-        All the different cubes produced by plotting scripts.
-    </p>
-</div>
+        <h2>Cube Types</h2>
+        <p>
+            All the different cubes produced by plotting scripts.
+        </p>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-    <table id="cube_types_table_id" class="display">
-        <thead>
-            <tr>
-                <th>Cube Type ID</th>
-                <th>Cube Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in cube_types_list %}
-            <tr>
-                <td>{{row.cube_type_id}}</td>
-                <td>{{row.cube_type}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        <table id="cube_types_table_id" class="display">
+            <thead>
+                <tr>
+                    <th>Cube Type ID</th>
+                    <th>Cube Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in cube_types_list %}
+                <tr>
+                    <td>{{row.cube_type_id}}</td>
+                    <td>{{row.cube_type}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="row">
     <div class="col">
         <h1>Parameters</h1>
         <p>This table catalogues all of the various parameter sets that were used to make rml and rml-dirty images.</p>
-    <table id="parameters_table_id" class="display">
-        <thead>
-            <tr>
-                <th>Parameter ID</th>
-                <th>Method type</th>
-                <th>Run count</th>
-                <th>npix</th>
-                <th>cell_size</th>
-                {% for key in parameters_header_set %}
-                <th>{{ key }}</th>
+        <table id="parameters_table_id" class="display">
+            <thead>
+                <tr>
+                    <th>Parameter ID</th>
+                    <th>Method type</th>
+                    <th>Run count</th>
+                    <th>npix</th>
+                    <th>cell_size</th>
+                    {% for key in parameters_header_set %}
+                    <th>{{ key }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in parameters_list %}
+                <tr>
+                    <td>{{row.parameter_id}}</td>
+                    <td>{{row.method_type}}</td>
+                    <td>{{row.run_count}}</td>
+                    <td>{{row.npix}}</td>
+                    <td>{{row.cell_size}}</td>
+                    {% for key in parameters_header_set %}
+                    <td>{{row[key]}}</td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in parameters_list %}
-            <tr>
-                <td>{{row.parameter_id}}</td>
-                <td>{{row.method_type}}</td>
-                <td>{{row.run_count}}</td>
-                <td>{{row.npix}}</td>
-                <td>{{row.cell_size}}</td>
-                {% for key in parameters_header_set %}
-                <td>{{row[key]}}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-                
+
 {% endblock page_content %}
 
 

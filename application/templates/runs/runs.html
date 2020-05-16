@@ -35,7 +35,7 @@
             {% for run in runs_list %}
             <tr>
                 <td><a class="btn btn-primary btn-sm"
-                        href={{ url_for('main.run', run_id=run.run_id) }}>{{run.run_id}}</a></td>
+                        href={{ url_for('runs.run', run_id=run.run_id) }}>{{run.run_id}}</a></td>
                 <td>{{run.disk_name}}</td>
                 <td>{{run.molecule_name}}</td>
                 <td>{{run.quantum_number}}</td>

@@ -33,14 +33,18 @@ def create_app(test_config=None):
         application.config["MAPS_PASSWORD"]
     )
 
-    from . import auth
+    # register our blueprints
+    from .views import auth
+    from .views import errors
+    from .views import home
+    from .views import disks
+    from .views import runs
 
     application.register_blueprint(auth.bp)
-
-    from .main import main as main_blueprint
-
-    application.register_blueprint(main_blueprint)
-    application.add_url_rule("/", endpoint="index")
+    application.register_blueprint(errors.bp)
+    application.register_blueprint(home.bp)
+    application.register_blueprint(disks.bp)
+    application.register_blueprint(runs.bp)
 
     # register the database with the app
     db.init_app(application)

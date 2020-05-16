@@ -38,7 +38,7 @@ def login():
         if error is None:
             session.clear()
             session["user_id"] = current_app.config.get("MAPS_USER")
-            return redirect(url_for("index"))
+            return redirect(url_for("home.index"))
 
         flash(error)
 
@@ -58,7 +58,7 @@ def load_logged_in_user():
 @bp.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("index"))
+    return redirect(url_for("home.index"))
 
 
 # this decorator makes each view check that the user is logged in

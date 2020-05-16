@@ -28,9 +28,9 @@
 <div class="page-header">
     <h1>Run {{run_id}} Summary</h1>
     <p>
-        Disk: <a href={{ url_for('main.disk', disk_id=combo_params.disk_id) }}>{{combo_params.disk_name}}</a>;
+        Disk: <a href={{ url_for('disks.disk', disk_id=combo_params.disk_id) }}>{{combo_params.disk_name}}</a>;
         Transition: <a
-            href={{ url_for('main.disk_transition', disk_id=combo_params.disk_id,
+            href={{ url_for('disks.disk_transition', disk_id=combo_params.disk_id,
                                                 transition_id=combo_params.transition_id) }}>{{combo_params.molecule_name}}
             {{combo_params.quantum_number}}</a>
         ({{combo_params.frequency}} GHz); Measurement Set {{ combo_params.version}} id:

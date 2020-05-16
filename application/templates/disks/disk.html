@@ -121,7 +121,7 @@
                     {% for ms in ms_list %}
                     <tr>
                         <td><a
-                                href={{ url_for('main.disk_transition', disk_id=disk_params.disk_id, transition_id=ms.transition_id) }}>{{ms.transition_id}}</a>
+                                href={{ url_for('disks.disk_transition', disk_id=disk_params.disk_id, transition_id=ms.transition_id) }}>{{ms.transition_id}}</a>
                         </td>
                         <td>{{ms.molecule_name}}</td>
                         <td>{{ms.quantum_number}}</td>

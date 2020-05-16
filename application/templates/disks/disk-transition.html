@@ -36,7 +36,7 @@
             <tbody>
                 {% for run in runs_list %}
                 <tr>
-                    <td><a href={{ url_for('main.run', run_id=run.run_id) }}>{{run.run_id}}</a></td>
+                    <td><a href={{ url_for('runs.run', run_id=run.run_id) }}>{{run.run_id}}</a></td>
                     <td>{{run.run_status}}</td>
                     <td>{{run.updated}}</td>
                     <td>{{run.method_type}}</td>
